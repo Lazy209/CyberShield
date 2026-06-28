@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "layout_sidebar.html" import sidebar %}
+{% block title %}Threat Intelligence — CyberShield{% endblock %}
+{% block head %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>{% endblock %}
+{% block body %}
+<div class="app-layout">
+  {{ sidebar(user, 'threat-intel') }}
+  <main class="main-content">
+    <header class="page-header"><h1>📈 Threat Intelligence Dashboard</h1><p>Visualize scan data and risk distribution</p></header>
+    <div class="stat-row" id="intel-stats"></div>
+    <div class="grid-2">
+      <div class="panel"><h2>Risk by Module</h2><canvas id="moduleChart"></canvas></div>
+      <div class="panel"><h2>Risk Levels</h2><canvas id="riskChart"></canvas></div>
+    </div>
+  </main>
+</div>
+{% block scripts %}
+<script>
+fetch('/api/threat-stats').then(r=>r.json()).then(data => {
+  document.getElementById('intel-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${data.total_scans}</div><div class="stat-lbl">Total Scans</div></div>`;
+  const modules = {}, risks = {};
+  data.breakdown.forEach(b => {
+    modules[b.module] = (modules[b.module]||0) + b.count;
+    risks[b.risk_level] = (risks[b.risk_level]||0) + b.count;
+  });
+  new Chart(document.getElementById('moduleChart'), {
+    type: 'bar', data: { labels: Object.keys(modules), datasets: [{ label: 'Scans', data: Object.values(modules), backgroundColor: '#3b82f6' }] },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('riskChart'), {
+    type: 'doughnut', data: { labels: Object.keys(risks), datasets: [{ data: Object.values(risks), backgroundColor: ['#22c55e','#eab308','#f97316','#ef4444'] }] },
+    options: { responsive: true }
+  });
+});
+</script>
+{% endblock %}
+{% endblock %}

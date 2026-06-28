@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "layout_sidebar.html" import sidebar %}
+{% block title %}Admin Panel — CyberShield{% endblock %}
+{% block body %}
+<div class="app-layout">
+  {{ sidebar(user, 'admin') }}
+  <main class="main-content">
+    <header class="page-header"><h1>⚙ Admin Dashboard</h1><p>System overview and user management</p></header>
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">{{ stats.users }}</div><div class="stat-lbl">Users</div></div>
+      <div class="stat-card accent-blue"><div class="stat-num">{{ stats.scans }}</div><div class="stat-lbl">Total Scans</div></div>
+      <div class="stat-card accent-red"><div class="stat-num">{{ stats.high_risk }}</div><div class="stat-lbl">High Risk Scans</div></div>
+      <div class="stat-card accent-green"><div class="stat-num">{{ stats.ai_messages }}</div><div class="stat-lbl">AI Queries</div></div>
+    </div>
+
+    <div class="panel">
+      <h2>Registered Users</h2>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Scans</th><th>Last Login</th></tr></thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.id }}</td><td>{{ u.username }}</td><td>{{ u.email }}</td>
+            <td><span class="role-badge">{{ u.role }}</span></td>
+            <td>{{ u.scan_count }}</td>
+            <td>{{ u.last_login[:19] if u.last_login else '—' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>All Recent Scans</h2>
+      <table class="data-table">
+        <thead><tr><th>Time</th><th>User</th><th>Module</th><th>Input</th><th>Risk</th></tr></thead>
+        <tbody>
+          {% for s in recent %}
+          <tr>
+            <td>{{ s.created_at[:19] }}</td><td>{{ s.username }}</td><td>{{ s.module }}</td>
+            <td>{{ s.input_summary[:50] }}</td>
+            <td><span class="risk-badge risk-{{ s.risk_level }}">{{ s.risk_level }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+{% endblock %}

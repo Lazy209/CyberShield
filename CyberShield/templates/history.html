@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "layout_sidebar.html" import sidebar %}
+{% block title %}Scan History — CyberShield{% endblock %}
+{% block body %}
+<div class="app-layout">
+  {{ sidebar(user, 'history') }}
+  <main class="main-content">
+    <header class="page-header">
+      <h1>Scan History</h1>
+      <p>All your previous security scans and analyses</p>
+    </header>
+    <div class="panel">
+      {% if scans %}
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Time</th><th>Module</th><th>Input</th><th>Risk</th><th>Report</th></tr></thead>
+        <tbody>
+          {% for s in scans %}
+          <tr>
+            <td>#{{ s.id }}</td>
+            <td>{{ s.created_at[:19] }}</td>
+            <td>{{ s.module }}</td>
+            <td>{{ s.input_summary[:60] }}</td>
+            <td><span class="risk-badge risk-{{ s.risk_level }}">{{ s.risk_level }}</span></td>
+            <td><a href="/api/report/{{ s.id }}" class="btn btn-sm">PDF</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty">No scan history yet.</p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

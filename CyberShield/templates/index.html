@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}CyberShield — AI-Powered Cybersecurity Platform{% endblock %}
+{% block body %}
+<nav class="topnav">
+  <a class="brand" href="{{ url_for('index') }}">🛡 CyberShield</a>
+  <div class="nav-right">
+    <a href="#features">Features</a>
+    <a href="#modules">Modules</a>
+    <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+    <a href="{{ url_for('register') }}" class="btn">Get Started</a>
+  </div>
+</nav>
+
+<section class="landing-hero">
+  <div class="landing-content">
+    <span class="pill">Cybersecurity Internship Project · {{ project.academic_year }}</span>
+    <h1>{{ project.title }}</h1>
+    <p>{{ project.subtitle }}</p>
+    <div class="hero-btns">
+      <a href="{{ url_for('register') }}" class="btn btn-lg">Create Account</a>
+      <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg">Login</a>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="section">
+  <div class="container">
+    <h2>Platform Highlights</h2>
+    <div class="grid-3">
+      <div class="feature-box"><h3>🔐 JWT Authentication</h3><p>Secure login with JSON Web Tokens and role-based access control.</p></div>
+      <div class="feature-box"><h3>🔍 Threat Detection</h3><p>URL phishing detector, vulnerability scanner, hash checker, and log analyzer.</p></div>
+      <div class="feature-box"><h3>🤖 AI Assistant</h3><p>Ask cybersecurity questions powered by LLM API with offline fallback.</p></div>
+      <div class="feature-box"><h3>📊 Threat Intel</h3><p>Interactive dashboard with scan metrics and risk visualization.</p></div>
+      <div class="feature-box"><h3>📰 Security News</h3><p>Live RSS feeds from top cybersecurity news sources.</p></div>
+      <div class="feature-box"><h3>📄 PDF Reports</h3><p>Export professional scan reports for documentation and submission.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="modules" class="section section-dark">
+  <div class="container">
+    <h2>12 Security Modules</h2>
+    <div class="module-list">
+      <span>Secure JWT Login</span><span>Vulnerability Scanner</span><span>Password Analyzer</span>
+      <span>Phishing URL Detector</span><span>File Hash Checker</span><span>Threat Intelligence</span>
+      <span>Security News</span><span>Log Analyzer</span><span>PDF Reports</span>
+      <span>Admin Dashboard</span><span>User History</span><span>AI Assistant</span>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>{{ project.student_name }} · {{ project.college_name }} · {{ project.academic_year }}</p>
+</footer>
+{% endblock %}

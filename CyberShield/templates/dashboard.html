@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "layout_sidebar.html" import sidebar %}
+{% block title %}Dashboard — CyberShield{% endblock %}
+{% block body %}
+<div class="app-layout">
+  {{ sidebar(user, 'dashboard') }}
+  <main class="main-content">
+    <header class="page-header">
+      <h1>Threat Detection Dashboard</h1>
+      <p>Welcome, {{ user.username }} — overview of your security scans</p>
+    </header>
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">{{ stats.total_scans }}</div><div class="stat-lbl">Total Scans</div></div>
+      <div class="stat-card accent-blue"><div class="stat-num">{{ recent|length }}</div><div class="stat-lbl">Recent Activity</div></div>
+      <div class="stat-card accent-green"><div class="stat-num">12</div><div class="stat-lbl">Active Modules</div></div>
+      <div class="stat-card accent-red"><div class="stat-num">{{ stats.breakdown|selectattr('risk_level','in',['high','critical'])|list|length }}</div><div class="stat-lbl">High Risk Events</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h2>Quick Actions</h2>
+        <div class="quick-grid">
+          <a href="{{ url_for('module_page', module_name='url') }}" class="quick-btn">🔗 Scan URL</a>
+          <a href="{{ url_for('module_page', module_name='password') }}" class="quick-btn">🔑 Check Password</a>
+          <a href="{{ url_for('module_page', module_name='vuln') }}" class="quick-btn">🛡 Scan Website</a>
+          <a href="{{ url_for('module_page', module_name='ai') }}" class="quick-btn">🤖 Ask AI</a>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Latest Security News</h2>
+        {% for article in news %}
+        <div class="news-item">
+          <a href="{{ article.link }}" target="_blank">{{ article.title }}</a>
+          <small>{{ article.source }}</small>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Recent Scans</h2>
+      {% if recent %}
+      <table class="data-table">
+        <thead><tr><th>Time</th><th>Module</th><th>Input</th><th>Risk</th></tr></thead>
+        <tbody>
+          {% for s in recent %}
+          <tr>
+            <td>{{ s.created_at[:19] }}</td>
+            <td>{{ s.module }}</td>
+            <td>{{ s.input_summary[:50] }}</td>
+            <td><span class="risk-badge risk-{{ s.risk_level }}">{{ s.risk_level }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty">No scans yet. Try a module from the sidebar!</p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

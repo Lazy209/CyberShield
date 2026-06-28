@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "layout_sidebar.html" import sidebar %}
+{% block title %}File Hash Checker — CyberShield{% endblock %}
+{% block body %}
+<div class="app-layout">
+  {{ sidebar(user, 'hash') }}
+  <main class="main-content">
+    <header class="page-header"><h1>📁 File Hash Checker</h1><p>Compute MD5/SHA256 hashes and check against threat database</p></header>
+    <div class="panel">
+      <form id="hash-form" enctype="multipart/form-data">
+        <label>Upload file (max 10MB)</label>
+        <input type="file" name="file" id="hash-file" required>
+        <button type="submit" class="btn">Check Hash</button>
+      </form>
+      <div id="scan-results" class="results-area hidden"></div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('hash-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData();
+  fd.append('file', document.getElementById('hash-file').files[0]);
+  const res = await fetch('/api/scan/hash', { method: 'POST', body: fd });
+  const data = await res.json();
+  CyberShield.renderResults(data, document.getElementById('scan-results'));
+});
+</script>
+{% endblock %}

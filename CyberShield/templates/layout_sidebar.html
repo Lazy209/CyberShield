@@ -1,0 +1,24 @@
+{% macro sidebar(user, active='') %}
+<aside class="sidebar">
+  <div class="sidebar-brand">🛡 CyberShield</div>
+  <nav class="sidebar-nav">
+    <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active=='dashboard' else '' }}">📊 Dashboard</a>
+    <a href="{{ url_for('module_page', module_name='password') }}" class="{{ 'active' if active=='password' else '' }}">🔑 Password Analyzer</a>
+    <a href="{{ url_for('module_page', module_name='url') }}" class="{{ 'active' if active=='url' else '' }}">🔗 Phishing URL Detector</a>
+    <a href="{{ url_for('module_page', module_name='vuln') }}" class="{{ 'active' if active=='vuln' else '' }}">🛡 Vulnerability Scanner</a>
+    <a href="{{ url_for('module_page', module_name='hash') }}" class="{{ 'active' if active=='hash' else '' }}">📁 File Hash Checker</a>
+    <a href="{{ url_for('module_page', module_name='logs') }}" class="{{ 'active' if active=='logs' else '' }}">📋 Log Analyzer</a>
+    <a href="{{ url_for('module_page', module_name='threat-intel') }}" class="{{ 'active' if active=='threat-intel' else '' }}">📈 Threat Intelligence</a>
+    <a href="{{ url_for('module_page', module_name='news') }}" class="{{ 'active' if active=='news' else '' }}">📰 Security News</a>
+    <a href="{{ url_for('module_page', module_name='ai') }}" class="{{ 'active' if active=='ai' else '' }}">🤖 AI Assistant</a>
+    <a href="{{ url_for('history') }}" class="{{ 'active' if active=='history' else '' }}">🕐 Scan History</a>
+    {% if user.role == 'admin' %}
+    <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if active=='admin' else '' }}">⚙ Admin Panel</a>
+    {% endif %}
+  </nav>
+  <div class="sidebar-user">
+    <span>{{ user.username }}</span>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</aside>
+{% endmacro %}

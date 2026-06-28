@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "layout_sidebar.html" import sidebar %}
+{% block title %}Security News — CyberShield{% endblock %}
+{% block body %}
+<div class="app-layout">
+  {{ sidebar(user, 'news') }}
+  <main class="main-content">
+    <header class="page-header"><h1>📰 Security News</h1><p>Latest cybersecurity news from trusted RSS feeds</p></header>
+    <div class="panel" id="news-panel"><p>Loading news...</p></div>
+  </main>
+</div>
+{% block scripts %}
+<script>
+fetch('/api/news').then(r=>r.json()).then(articles => {
+  const panel = document.getElementById('news-panel');
+  if (!articles.length) { panel.innerHTML = '<p>No news available.</p>'; return; }
+  panel.innerHTML = articles.map(a => `
+    <div class="news-card">
+      <h3><a href="${a.link}" target="_blank">${a.title}</a></h3>
+      <p>${a.summary || ''}</p>
+      <small>${a.source} · ${a.published || ''}</small>
+    </div>`).join('');
+});
+</script>
+{% endblock %}
+{% endblock %}
